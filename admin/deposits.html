@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deposits — TradeEx Admin</title>
+  <link rel="icon" href="../assets/img/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <style>
+    .notif-dropdown { position:absolute; top:calc(100%+8px); right:0; width:180px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-xl); box-shadow:var(--shadow-xl); z-index:var(--z-dropdown); overflow:hidden; }
+    .admin-table-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; }
+    .admin-table-header { display:flex; align-items:center; justify-content:space-between; padding:var(--space-5) var(--space-6); border-bottom:1px solid var(--border-light); flex-wrap:wrap; gap:var(--space-3); }
+    .admin-table-title { font-family:var(--font-display); font-size:var(--text-md); font-weight:700; color:var(--text); display:flex; align-items:center; gap:var(--space-2); }
+    .admin-table-title svg { color:var(--accent); width:18px; height:18px; }
+    .admin-tabs { display:flex; gap:var(--space-1); background:var(--surface-2); border-radius:var(--radius-lg); padding:var(--space-1); }
+    .admin-tab { padding:7px 14px; border-radius:var(--radius-md); font-size:var(--text-sm); font-weight:600; color:var(--text-muted); cursor:pointer; background:transparent; border:none; transition:var(--transition-fast); white-space:nowrap; }
+    .admin-tab:hover { color:var(--text); }
+    .admin-tab.active { background:var(--surface); color:var(--text); box-shadow:var(--shadow-sm); }
+    table.admin-table { width:100%; border-collapse:collapse; min-width:600px; }
+    .admin-table thead { background:var(--surface-2); }
+    .admin-table th { padding:var(--space-3) var(--space-4); text-align:left; font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; white-space:nowrap; }
+    .admin-table td { padding:var(--space-4) var(--space-4); border-bottom:1px solid var(--border-light); vertical-align:middle; }
+    .admin-table tbody tr:last-child td { border-bottom:none; }
+    .admin-table tbody tr:hover { background:var(--surface-2); }
+    .table-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .table-scroll::-webkit-scrollbar { height:4px; }
+    .table-scroll::-webkit-scrollbar-thumb { background:var(--border-strong); border-radius:999px; }
+    @media(max-width:768px) {
+      .admin-tabs { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+      .admin-table th, .admin-table td { padding:var(--space-3); font-size:var(--text-xs); }
+    }
+  </style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="sidebar-logo">
+      <div class="logo-mark" style="background:var(--gradient-red);">T</div>
+      <span class="logo-text">Trade<span style="color:var(--red-400)">Ex</span> <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.40);margin-left:4px;">ADMIN</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Admin</div>
+        <a href="index.html" class="nav-item" data-tooltip="Dashboard"><i data-lucide="layout-dashboard"></i><span class="nav-label">Dashboard</span></a>
+        <a href="users.html" class="nav-item" data-tooltip="Users"><i data-lucide="users"></i><span class="nav-label">Users</span></a>
+        <a href="deposits.html" class="nav-item active" data-tooltip="Deposits"><i data-lucide="arrow-down-circle"></i><span class="nav-label">Deposits</span></a>
+        <a href="withdrawals.html" class="nav-item" data-tooltip="Withdrawals"><i data-lucide="arrow-up-circle"></i><span class="nav-label">Withdrawals</span></a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings"><i data-lucide="settings"></i><span class="nav-label">Settings</span></a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">User Area</div>
+        <a href="../dashboard/index.html" class="nav-item"><i data-lucide="external-link"></i><span class="nav-label">User Dashboard</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" id="sidebarAvatar" style="background:var(--gradient-red);">AD</div>
+        <div class="user-info"><div class="user-name" id="sidebarUserName">Admin</div><div class="user-role" id="sidebarUserRole">Administrator</div></div>
+      </div>
+      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn"><i data-lucide="chevrons-left" style="width:18px;height:18px"></i></button>
+    </div>
+  </aside>
+
+  <div class="app-content" id="appContent">
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn"><i data-lucide="menu" style="width:20px;height:20px"></i></button>
+        <span class="topbar-title">Deposits</span>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle topbar-btn" id="themeToggle"><i data-lucide="moon" class="icon-moon" style="width:18px;height:18px"></i><i data-lucide="sun" class="icon-sun" style="width:18px;height:18px"></i></button>
+        <div style="position:relative;flex-shrink:0;">
+          <button class="topbar-user" id="userMenuBtn">
+            <div class="avatar avatar-sm" id="topbarAvatar" style="background:var(--gradient-red);">AD</div>
+            <span class="user-name-topbar hide-mobile" id="topbarUserName">Admin</span>
+            <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted)"></i>
+          </button>
+          <div class="notif-dropdown hidden" id="userDropdown">
+            <div style="padding:var(--space-3) var(--space-4);"><div style="font-size:var(--text-xs);color:var(--text-faint);font-weight:700;text-transform:uppercase;">Admin</div></div>
+            <div style="padding:0 var(--space-2) var(--space-2);">
+              <a href="settings.html" class="nav-item" style="color:var(--text-secondary);border-radius:var(--radius-md);"><i data-lucide="settings"></i><span>Settings</span></a>
+              <div style="height:1px;background:var(--border-light);margin:var(--space-2) 0;"></div>
+              <button data-logout class="nav-item" style="width:100%;color:var(--error);border-radius:var(--radius-md);"><i data-lucide="log-out"></i><span>Log Out</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <div class="page-header">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">Gift Card Deposits</h1>
+            <p class="page-subtitle">Review and approve Apple Gift Card deposits · <span id="depositsCount">0</span> shown</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-table-card animate-fade-in">
+        <div class="admin-table-header">
+          <div class="admin-table-title"><i data-lucide="arrow-down-circle"></i>Deposits</div>
+          <div class="admin-tabs">
+            <button class="admin-tab active" data-deposit-tab="pending">Pending</button>
+            <button class="admin-tab" data-deposit-tab="approved">Approved</button>
+            <button class="admin-tab" data-deposit-tab="rejected">Rejected</button>
+            <button class="admin-tab" data-deposit-tab="all">All</button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Amount</th>
+                <th class="hide-col">Card Number</th>
+                <th>Image</th>
+                <th>Status</th>
+                <th class="hide-col">Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="depositsTableBody">
+              <tr><td colspan="7"><div class="skeleton" style="height:44px;border-radius:8px;margin:12px 0;"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<script>
+  lucide.createIcons();
+  const html = document.documentElement;
+  html.setAttribute('data-theme', localStorage.getItem('tradex-theme') || 'light');
+  document.getElementById('themeToggle').addEventListener('click', () => { const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; html.setAttribute('data-theme', next); localStorage.setItem('tradex-theme', next); lucide.createIcons(); });
+  const sidebar = document.getElementById('sidebar'), appContent = document.getElementById('appContent'), topbar = document.getElementById('topbar');
+  if (localStorage.getItem('tradex-sidebar') === 'collapsed') { sidebar.classList.add('collapsed'); appContent.classList.add('sidebar-collapsed'); topbar.classList.add('sidebar-collapsed'); }
+  document.getElementById('sidebarCollapseBtn')?.addEventListener('click', () => { const c = sidebar.classList.toggle('collapsed'); appContent.classList.toggle('sidebar-collapsed', c); topbar.classList.toggle('sidebar-collapsed', c); localStorage.setItem('tradex-sidebar', c ? 'collapsed' : 'expanded'); lucide.createIcons(); });
+  document.getElementById('mobileMenuBtn')?.addEventListener('click', () => { sidebar.classList.add('mobile-open'); document.getElementById('sidebarOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; });
+  document.getElementById('sidebarOverlay')?.addEventListener('click', () => { sidebar.classList.remove('mobile-open'); document.getElementById('sidebarOverlay').classList.remove('active'); document.body.style.overflow = ''; });
+  document.getElementById('userMenuBtn')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('hidden'); });
+  document.addEventListener('click', () => document.getElementById('userDropdown')?.classList.add('hidden'));
+</script>
+<script type="module">
+  import { initAdminDeposits } from '../assets/js/admin.js';
+  await initAdminDeposits();
+  lucide.createIcons();
+</script>
+</body>
+</html>

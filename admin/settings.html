@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — TradeEx Admin</title>
+  <link rel="icon" href="../assets/img/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <style>
+    .notif-dropdown { position:absolute; top:calc(100%+8px); right:0; width:180px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-xl); box-shadow:var(--shadow-xl); z-index:var(--z-dropdown); overflow:hidden; }
+    .settings-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; margin-bottom:var(--space-5); }
+    .settings-card-header { padding:var(--space-5) var(--space-6); border-bottom:1px solid var(--border-light); display:flex; align-items:center; gap:var(--space-2); }
+    .settings-card-title { font-family:var(--font-display); font-size:var(--text-md); font-weight:700; color:var(--text); display:flex; align-items:center; gap:var(--space-2); }
+    .settings-card-title svg { color:var(--accent); width:18px; height:18px; }
+    .settings-card-body { padding:var(--space-6); }
+    .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-5); }
+    .setting-item label { font-size:var(--text-sm); font-weight:600; color:var(--text-secondary); margin-bottom:var(--space-2); display:block; }
+    .setting-item .hint { font-size:var(--text-xs); color:var(--text-muted); margin-top:4px; }
+    @media(max-width:640px) { .settings-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="sidebar-logo">
+      <div class="logo-mark" style="background:var(--gradient-red);">T</div>
+      <span class="logo-text">Trade<span style="color:var(--red-400)">Ex</span> <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.40);margin-left:4px;">ADMIN</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Admin</div>
+        <a href="index.html" class="nav-item" data-tooltip="Dashboard"><i data-lucide="layout-dashboard"></i><span class="nav-label">Dashboard</span></a>
+        <a href="users.html" class="nav-item" data-tooltip="Users"><i data-lucide="users"></i><span class="nav-label">Users</span></a>
+        <a href="deposits.html" class="nav-item" data-tooltip="Deposits"><i data-lucide="arrow-down-circle"></i><span class="nav-label">Deposits</span></a>
+        <a href="withdrawals.html" class="nav-item" data-tooltip="Withdrawals"><i data-lucide="arrow-up-circle"></i><span class="nav-label">Withdrawals</span></a>
+        <a href="settings.html" class="nav-item active" data-tooltip="Settings"><i data-lucide="settings"></i><span class="nav-label">Settings</span></a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">User Area</div>
+        <a href="../dashboard/index.html" class="nav-item"><i data-lucide="external-link"></i><span class="nav-label">User Dashboard</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" id="sidebarAvatar" style="background:var(--gradient-red);">AD</div>
+        <div class="user-info"><div class="user-name" id="sidebarUserName">Admin</div><div class="user-role" id="sidebarUserRole">Administrator</div></div>
+      </div>
+      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn"><i data-lucide="chevrons-left" style="width:18px;height:18px"></i></button>
+    </div>
+  </aside>
+
+  <div class="app-content" id="appContent">
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn"><i data-lucide="menu" style="width:20px;height:20px"></i></button>
+        <span class="topbar-title">Platform Settings</span>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle topbar-btn" id="themeToggle"><i data-lucide="moon" class="icon-moon" style="width:18px;height:18px"></i><i data-lucide="sun" class="icon-sun" style="width:18px;height:18px"></i></button>
+        <div style="position:relative;flex-shrink:0;">
+          <button class="topbar-user" id="userMenuBtn">
+            <div class="avatar avatar-sm" id="topbarAvatar" style="background:var(--gradient-red);">AD</div>
+            <span class="user-name-topbar hide-mobile" id="topbarUserName">Admin</span>
+            <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted)"></i>
+          </button>
+          <div class="notif-dropdown hidden" id="userDropdown">
+            <div style="padding:var(--space-3) var(--space-4);"><div style="font-size:var(--text-xs);color:var(--text-faint);font-weight:700;text-transform:uppercase;">Admin</div></div>
+            <div style="padding:0 var(--space-2) var(--space-2);">
+              <div style="height:1px;background:var(--border-light);margin:var(--space-2) 0;"></div>
+              <button data-logout class="nav-item" style="width:100%;color:var(--error);border-radius:var(--radius-md);"><i data-lucide="log-out"></i><span>Log Out</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <div class="page-header">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">Platform Settings</h1>
+            <p class="page-subtitle">Configure TradeEx platform behaviour and contact details</p>
+          </div>
+        </div>
+      </div>
+
+      <form id="settingsForm" novalidate>
+        <!-- General -->
+        <div class="settings-card animate-fade-in">
+          <div class="settings-card-header">
+            <div class="settings-card-title"><i data-lucide="globe"></i>General Settings</div>
+          </div>
+          <div class="settings-card-body">
+            <div class="settings-grid">
+              <div class="setting-item">
+                <label for="setting_site_name">Platform Name</label>
+                <input type="text" id="setting_site_name" class="form-input" placeholder="TradeEx" />
+                <div class="hint">Displayed in emails and notifications.</div>
+              </div>
+              <div class="setting-item">
+                <label for="setting_maintenance_mode">Maintenance Mode</label>
+                <select id="setting_maintenance_mode" class="form-select">
+                  <option value="false">Off — Platform is live</option>
+                  <option value="true">On — Under maintenance</option>
+                </select>
+                <div class="hint">When enabled, users cannot log in.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial -->
+        <div class="settings-card animate-fade-in delay-100">
+          <div class="settings-card-header">
+            <div class="settings-card-title"><i data-lucide="dollar-sign"></i>Financial Settings</div>
+          </div>
+          <div class="settings-card-body">
+            <div class="settings-grid">
+              <div class="setting-item">
+                <label for="setting_min_withdrawal">Minimum Withdrawal (USD)</label>
+                <div class="input-addon-wrapper">
+                  <span class="input-addon">$</span>
+                  <input type="number" id="setting_min_withdrawal" class="form-input" placeholder="20" min="1" />
+                </div>
+                <div class="hint">Minimum amount users can withdraw.</div>
+              </div>
+              <div class="setting-item">
+                <label for="setting_referral_bonus_usd">Referral Bonus (USD)</label>
+                <div class="input-addon-wrapper">
+                  <span class="input-addon">$</span>
+                  <input type="number" id="setting_referral_bonus_usd" class="form-input" placeholder="10" min="0" />
+                </div>
+                <div class="hint">Bonus credited when a referred user invests.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="settings-card animate-fade-in delay-200">
+          <div class="settings-card-header">
+            <div class="settings-card-title"><i data-lucide="mail"></i>Contact & Deposit Settings</div>
+          </div>
+          <div class="settings-card-body">
+            <div class="settings-grid">
+              <div class="setting-item">
+                <label for="setting_deposit_email">Deposit Email</label>
+                <div class="input-wrapper">
+                  <i data-lucide="mail" class="input-icon left" style="width:15px;height:15px"></i>
+                  <input type="email" id="setting_deposit_email" class="form-input has-left-icon" placeholder="deposits@tradex.com" />
+                </div>
+                <div class="hint">Email shown to users when submitting gift card deposits.</div>
+              </div>
+              <div class="setting-item">
+                <label for="setting_support_email">Support Email</label>
+                <div class="input-wrapper">
+                  <i data-lucide="headphones" class="input-icon left" style="width:15px;height:15px"></i>
+                  <input type="email" id="setting_support_email" class="form-input has-left-icon" placeholder="support@tradex.com" />
+                </div>
+                <div class="hint">Shown on withdrawal page and footer.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save -->
+        <div style="display:flex;justify-content:flex-end;gap:var(--space-3);">
+          <button type="submit" id="saveSettingsBtn" class="btn btn-accent btn-lg">
+            <i data-lucide="save" style="width:16px;height:16px"></i>
+            Save Settings
+          </button>
+        </div>
+      </form>
+
+      <!-- Set Admin Account -->
+      <div class="settings-card animate-fade-in delay-300" style="margin-top:var(--space-8);border-color:var(--warning-border);">
+        <div class="settings-card-header" style="background:var(--warning-bg);">
+          <div class="settings-card-title" style="color:var(--warning);">
+            <i data-lucide="alert-triangle"></i>
+            Set Admin Account
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <p style="font-size:var(--text-sm);color:var(--text-muted);margin-bottom:var(--space-4);line-height:1.6;">
+            To grant admin access to a user, run the following SQL in your Supabase SQL Editor.
+            Replace the email with the account you want to make admin.
+          </p>
+          <div style="background:var(--navy-900);border-radius:var(--radius-md);padding:var(--space-4);font-family:monospace;font-size:var(--text-sm);color:#4ade80;overflow-x:auto;">
+            UPDATE public.profiles<br />
+            SET role = 'admin'<br />
+            WHERE email = 'your-email@example.com';
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<script>
+  lucide.createIcons();
+  const html = document.documentElement;
+  html.setAttribute('data-theme', localStorage.getItem('tradex-theme') || 'light');
+  document.getElementById('themeToggle').addEventListener('click', () => { const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; html.setAttribute('data-theme', next); localStorage.setItem('tradex-theme', next); lucide.createIcons(); });
+  const sidebar = document.getElementById('sidebar'), appContent = document.getElementById('appContent'), topbar = document.getElementById('topbar');
+  if (localStorage.getItem('tradex-sidebar') === 'collapsed') { sidebar.classList.add('collapsed'); appContent.classList.add('sidebar-collapsed'); topbar.classList.add('sidebar-collapsed'); }
+  document.getElementById('sidebarCollapseBtn')?.addEventListener('click', () => { const c = sidebar.classList.toggle('collapsed'); appContent.classList.toggle('sidebar-collapsed', c); topbar.classList.toggle('sidebar-collapsed', c); localStorage.setItem('tradex-sidebar', c ? 'collapsed' : 'expanded'); lucide.createIcons(); });
+  document.getElementById('mobileMenuBtn')?.addEventListener('click', () => { sidebar.classList.add('mobile-open'); document.getElementById('sidebarOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; });
+  document.getElementById('sidebarOverlay')?.addEventListener('click', () => { sidebar.classList.remove('mobile-open'); document.getElementById('sidebarOverlay').classList.remove('active'); document.body.style.overflow = ''; });
+  document.getElementById('userMenuBtn')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('hidden'); });
+  document.addEventListener('click', () => document.getElementById('userDropdown')?.classList.add('hidden'));
+</script>
+<script type="module">
+  import { initAdminSettings } from '../assets/js/admin.js';
+  await initAdminSettings();
+  lucide.createIcons();
+</script>
+</body>
+</html>

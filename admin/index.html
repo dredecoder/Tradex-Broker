@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — TradeEx</title>
+  <link rel="icon" href="../assets/img/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <style>
+    /* ── ADMIN SHARED ───────────────────────────────── */
+    .admin-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-4); margin-bottom:var(--space-8); }
+
+    .admin-stat-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius-lg); padding:var(--space-5);
+      position:relative; overflow:hidden; transition:var(--transition-base);
+    }
+    .admin-stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+    .admin-stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+    .admin-stat-card.navy::before  { background:var(--gradient-navy); }
+    .admin-stat-card.red::before   { background:var(--gradient-red); }
+    .admin-stat-card.green::before { background:var(--success); }
+    .admin-stat-card.amber::before { background:var(--warning); }
+    .admin-stat-card.blue::before  { background:var(--info); }
+    .admin-stat-card.teal::before  { background:linear-gradient(135deg,#0d9488,#14b8a6); }
+    .admin-stat-card.purple::before{ background:linear-gradient(135deg,#7c3aed,#a855f7); }
+
+    .admin-stat-icon {
+      width:38px; height:38px; border-radius:var(--radius-md);
+      display:flex; align-items:center; justify-content:center; margin-bottom:var(--space-3);
+    }
+    .admin-stat-label { font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:4px; }
+    .admin-stat-value { font-family:var(--font-display); font-size:var(--text-2xl); font-weight:900; color:var(--text); letter-spacing:-0.03em; }
+
+    .admin-row {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:var(--space-3); padding:var(--space-4) 0;
+      border-bottom:1px solid var(--border-light); transition:var(--transition-fast);
+    }
+    .admin-row:last-child { border-bottom:none; }
+    .admin-row:hover { background:var(--surface-2); margin:0 calc(-1 * var(--space-6)); padding-left:var(--space-6); padding-right:var(--space-6); border-radius:var(--radius-md); }
+    .admin-row-info { flex:1; min-width:0; }
+    .admin-row-name { font-size:var(--text-sm); font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .admin-row-sub  { font-size:var(--text-xs); color:var(--text-muted); margin-top:1px; }
+
+    .admin-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius-xl); overflow:hidden; margin-bottom:var(--space-5);
+    }
+    .admin-card-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:var(--space-5) var(--space-6); border-bottom:1px solid var(--border-light);
+      flex-wrap:wrap; gap:var(--space-3);
+    }
+    .admin-card-title {
+      font-family:var(--font-display); font-size:var(--text-md); font-weight:700; color:var(--text);
+      display:flex; align-items:center; gap:var(--space-2);
+    }
+    .admin-card-title svg { color:var(--accent); width:18px; height:18px; }
+    .admin-card-body { padding:0 var(--space-6); }
+
+    .admin-two-col { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-5); }
+
+    .notif-dropdown {
+      position:absolute; top:calc(100% + 8px); right:0;
+      width:180px; background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius-xl); box-shadow:var(--shadow-xl);
+      z-index:var(--z-dropdown); overflow:hidden;
+    }
+
+    /* User dashboard redirect banner */
+    .user-dash-banner {
+      background: linear-gradient(135deg, rgba(27,79,138,0.08), rgba(178,34,52,0.05));
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap;
+    }
+    .user-dash-banner-text { font-size:var(--text-sm); color:var(--text-muted); }
+    .user-dash-banner-text strong { color:var(--text); }
+
+    @media (max-width:1100px) { .admin-stats { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:768px) {
+      .admin-two-col { grid-template-columns:1fr; }
+      .admin-stats   { grid-template-columns:repeat(2,1fr); }
+      .admin-card-body { padding:0 var(--space-4); }
+      .notif-dropdown { position:fixed; top:calc(var(--topbar-height)+8px); left:12px; right:12px; width:auto; }
+    }
+    @media (max-width:480px) {
+      .admin-stats { grid-template-columns:1fr 1fr; }
+      .admin-stat-value { font-size:var(--text-xl); }
+    }
+  </style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="sidebar-logo">
+      <div class="logo-mark" style="background:var(--gradient-red);">T</div>
+      <span class="logo-text">Trade<span style="color:var(--red-400)">Ex</span> <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.40);margin-left:4px;">ADMIN</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Admin</div>
+        <a href="index.html" class="nav-item active" data-tooltip="Dashboard">
+          <i data-lucide="layout-dashboard"></i><span class="nav-label">Dashboard</span>
+        </a>
+        <a href="users.html" class="nav-item" data-tooltip="Users">
+          <i data-lucide="users"></i><span class="nav-label">Users</span>
+        </a>
+        <a href="deposits.html" class="nav-item" data-tooltip="Deposits">
+          <i data-lucide="arrow-down-circle"></i>
+          <span class="nav-label">Deposits</span>
+          <span class="nav-badge" id="depositAlert" style="display:none;">0</span>
+        </a>
+        <a href="withdrawals.html" class="nav-item" data-tooltip="Withdrawals">
+          <i data-lucide="arrow-up-circle"></i>
+          <span class="nav-label">Withdrawals</span>
+          <span class="nav-badge" id="withdrawalAlert" style="display:none;">0</span>
+        </a>
+        <a href="settings.html" class="nav-item" data-tooltip="Settings">
+          <i data-lucide="settings"></i><span class="nav-label">Settings</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">User Area</div>
+        <a href="../dashboard/index.html" class="nav-item" data-tooltip="User Dashboard">
+          <i data-lucide="external-link"></i><span class="nav-label">User Dashboard</span>
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" id="sidebarAvatar" style="background:var(--gradient-red);">AD</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarUserName">Admin</div>
+          <div class="user-role" id="sidebarUserRole">Administrator</div>
+        </div>
+      </div>
+      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn">
+        <i data-lucide="chevrons-left" style="width:18px;height:18px"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="app-content" id="appContent">
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn"><i data-lucide="menu" style="width:20px;height:20px"></i></button>
+        <span class="topbar-title">Admin Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle topbar-btn" id="themeToggle">
+          <i data-lucide="moon" class="icon-moon" style="width:18px;height:18px"></i>
+          <i data-lucide="sun"  class="icon-sun"  style="width:18px;height:18px"></i>
+        </button>
+        <div style="position:relative;flex-shrink:0;">
+          <button class="topbar-user" id="userMenuBtn">
+            <div class="avatar avatar-sm" id="topbarAvatar" style="background:var(--gradient-red);">AD</div>
+            <span class="user-name-topbar hide-mobile" id="topbarUserName">Admin</span>
+            <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted)"></i>
+          </button>
+          <div class="notif-dropdown hidden" id="userDropdown" style="width:180px;">
+            <div style="padding:var(--space-3) var(--space-4);">
+              <div style="font-size:var(--text-xs);color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Admin</div>
+            </div>
+            <div style="padding:0 var(--space-2) var(--space-2);">
+              <a href="settings.html" class="nav-item" style="color:var(--text-secondary);border-radius:var(--radius-md);">
+                <i data-lucide="settings"></i><span>Settings</span>
+              </a>
+              <div style="height:1px;background:var(--border-light);margin:var(--space-2) 0;"></div>
+              <button data-logout class="nav-item" style="width:100%;color:var(--error);border-radius:var(--radius-md);">
+                <i data-lucide="log-out"></i><span>Log Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <div class="page-header">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">Admin Dashboard</h1>
+            <p class="page-subtitle">Platform overview — real-time data</p>
+          </div>
+          <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;">
+            <a href="deposits.html" class="btn btn-accent btn-sm">
+              <i data-lucide="arrow-down-circle" style="width:14px;height:14px"></i>
+              Review Deposits
+            </a>
+            <a href="withdrawals.html" class="btn btn-outline btn-sm">
+              <i data-lucide="arrow-up-circle" style="width:14px;height:14px"></i>
+              Review Withdrawals
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Switch to user dashboard banner -->
+      <div class="user-dash-banner animate-fade-in">
+        <div class="user-dash-banner-text">
+          <strong>You're in Admin Mode.</strong> Want to view the platform as a regular user?
+        </div>
+        <a href="../dashboard/index.html" class="btn btn-primary btn-sm" style="flex-shrink:0;">
+          <i data-lucide="external-link" style="width:14px;height:14px"></i>
+          Go to User Dashboard
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="admin-stats animate-fade-in">
+        <div class="admin-stat-card navy">
+          <div class="admin-stat-icon" style="background:var(--info-bg);color:var(--info);"><i data-lucide="users" style="width:18px;height:18px"></i></div>
+          <div class="admin-stat-label">Total Users</div>
+          <div class="admin-stat-value" id="statTotalUsers">—</div>
+        </div>
+        <div class="admin-stat-card amber">
+          <div class="admin-stat-icon" style="background:var(--warning-bg);color:var(--warning);"><i data-lucide="clock" style="width:18px;height:18px"></i></div>
+          <div class="admin-stat-label">Pending Deposits</div>
+          <div class="admin-stat-value" id="statPendingDeposits">—</div>
+        </div>
+        <div class="admin-stat-card red">
+          <div class="admin-stat-icon" style="background:var(--error-bg);color:var(--error);"><i data-lucide="arrow-up-circle" style="width:18px;height:18px"></i></div>
+          <div class="admin-stat-label">Pending Withdrawals</div>
+          <div class="admin-stat-value" id="statPendingWithdrawals">—</div>
+        </div>
+        <div class="admin-stat-card green">
+          <div class="admin-stat-icon" style="background:var(--success-bg);color:var(--success);"><i data-lucide="activity" style="width:18px;height:18px"></i></div>
+          <div class="admin-stat-label">Active Investments</div>
+          <div class="admin-stat-value" id="statActiveInvestments">—</div>
+        </div>
+        <div class="admin-stat-card blue">
+          <div class="admin-stat-icon" style="background:var(--info-bg);color:var(--info);"><i data-lucide="arrow-down-circle" style="width:18px;height:18px"></i></div>
+          <div class="admin-stat-label">Total Deposited</div>
+          <div class="admin-stat-value" id="statTotalDeposited">—</div>
+        </div>
+        <div class="admin-stat-card teal">
+          <div class="admin-stat-icon" style="background:rgba(13,148,136,0.12);color:#0d9488;"><i data-lucide="trending-up" style="width:18px;height:18px"></i></div>
+          <div class="admin-stat-label">Total Profit Paid</div>
+          <div class="admin-stat-value" id="statTotalProfit">—</div>
+        </div>
+        <div class="admin-stat-card purple">
+          <div class="admin-stat-icon" style="background:rgba(124,58,237,0.12);color:#7c3aed;"><i data-lucide="send" style="width:18px;height:18px"></i></div>
+          <div class="admin-stat-label">Total Withdrawn</div>
+          <div class="admin-stat-value" id="statTotalWithdrawn">—</div>
+        </div>
+      </div>
+
+      <!-- Pending actions -->
+      <div class="admin-two-col animate-fade-in-up">
+        <!-- Pending deposits -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i data-lucide="arrow-down-circle"></i>Pending Deposits</div>
+            <a href="deposits.html" class="btn btn-outline btn-xs">View all</a>
+          </div>
+          <div class="admin-card-body">
+            <div id="pendingDepositsEmpty" class="d-none">
+              <div class="empty-state" style="padding:var(--space-8) var(--space-4);">
+                <i data-lucide="check-circle" style="width:32px;height:32px;color:var(--success);margin:0 auto 10px;display:block;"></i>
+                <div class="empty-title" style="font-size:14px;">All deposits reviewed</div>
+              </div>
+            </div>
+            <div id="pendingDepositsList"></div>
+          </div>
+        </div>
+
+        <!-- Pending withdrawals -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i data-lucide="arrow-up-circle"></i>Pending Withdrawals</div>
+            <a href="withdrawals.html" class="btn btn-outline btn-xs">View all</a>
+          </div>
+          <div class="admin-card-body">
+            <div id="pendingWithdrawalsEmpty" class="d-none">
+              <div class="empty-state" style="padding:var(--space-8) var(--space-4);">
+                <i data-lucide="check-circle" style="width:32px;height:32px;color:var(--success);margin:0 auto 10px;display:block;"></i>
+                <div class="empty-title" style="font-size:14px;">All withdrawals reviewed</div>
+              </div>
+            </div>
+            <div id="pendingWithdrawalsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent users -->
+      <div class="admin-card animate-fade-in-up delay-200">
+        <div class="admin-card-header">
+          <div class="admin-card-title"><i data-lucide="users"></i>Recent Signups</div>
+          <a href="users.html" class="btn btn-outline btn-xs">Manage users</a>
+        </div>
+        <div class="admin-card-body">
+          <div id="recentUsersList"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<script>
+  lucide.createIcons();
+  const html = document.documentElement;
+  html.setAttribute('data-theme', localStorage.getItem('tradex-theme') || 'light');
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tradex-theme', next);
+    lucide.createIcons();
+  });
+  const sidebar = document.getElementById('sidebar'), appContent = document.getElementById('appContent'), topbar = document.getElementById('topbar');
+  if (localStorage.getItem('tradex-sidebar') === 'collapsed') { sidebar.classList.add('collapsed'); appContent.classList.add('sidebar-collapsed'); topbar.classList.add('sidebar-collapsed'); }
+  document.getElementById('sidebarCollapseBtn')?.addEventListener('click', () => {
+    const c = sidebar.classList.toggle('collapsed');
+    appContent.classList.toggle('sidebar-collapsed', c); topbar.classList.toggle('sidebar-collapsed', c);
+    localStorage.setItem('tradex-sidebar', c ? 'collapsed' : 'expanded'); lucide.createIcons();
+  });
+  document.getElementById('mobileMenuBtn')?.addEventListener('click', () => { sidebar.classList.add('mobile-open'); document.getElementById('sidebarOverlay').classList.add('active'); document.body.style.overflow='hidden'; });
+  document.getElementById('sidebarOverlay')?.addEventListener('click', () => { sidebar.classList.remove('mobile-open'); document.getElementById('sidebarOverlay').classList.remove('active'); document.body.style.overflow=''; });
+  document.getElementById('userMenuBtn')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('hidden'); });
+  document.addEventListener('click', () => document.getElementById('userDropdown')?.classList.add('hidden'));
+</script>
+<script type="module">
+  import { initAdminDashboard } from '../assets/js/admin.js';
+  await initAdminDashboard();
+  lucide.createIcons();
+</script>
+</body>
+</html>
