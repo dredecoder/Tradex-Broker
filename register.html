@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — TradeEx</title>
+
+  <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/theme.css" />
+
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ── LEFT PANEL ── */
+    .auth-left {
+      background: var(--navy-900);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 48px;
+    }
+
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(178,34,52,0.20) 0%, transparent 70%);
+      top: -100px;
+      right: -150px;
+      pointer-events: none;
+    }
+
+    .auth-left::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(27,79,138,0.25) 0%, transparent 70%);
+      bottom: -80px;
+      left: -80px;
+      pointer-events: none;
+    }
+
+    .auth-left-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+
+    .auth-left-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      margin-bottom: auto;
+    }
+
+    .auth-logo .logo-mark {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-red);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 20px;
+      color: white;
+      box-shadow: var(--shadow-accent);
+    }
+
+    .auth-logo .logo-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.04em;
+    }
+
+    .auth-logo .logo-name span { color: var(--red-400); }
+
+    .auth-left-hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 0;
+    }
+
+    .auth-left-hero h2 {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .auth-left-hero h2 span {
+      background: var(--gradient-red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .auth-left-hero p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      max-width: 320px;
+      margin-bottom: 32px;
+    }
+
+    /* Plans preview on left */
+    .plans-preview {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .plan-preview-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .plan-preview-row .plan-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plan-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .plan-preview-row .pname {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .plan-preview-row .pinvest {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .plan-preview-row .preturn {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 800;
+      color: #4ade80;
+    }
+
+    .auth-left-footer {
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .auth-left-footer span {
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .auth-left-footer .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.20);
+    }
+
+    /* ── RIGHT PANEL ── */
+    .auth-right {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .auth-right-top {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .auth-form-wrap {
+      width: 100%;
+      max-width: 440px;
+      padding: 32px 0;
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    .auth-form-header {
+      margin-bottom: 28px;
+    }
+
+    .auth-form-header .eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .auth-form-header .eyebrow::before {
+      content: '';
+      width: 16px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    .auth-form-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2.5vw, 30px);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .auth-form-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .auth-form-header p a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-form-header p a:hover { text-decoration: underline; }
+
+    /* Two-column row */
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* Password wrapper */
+    .password-wrapper { position: relative; }
+
+    .password-wrapper .form-input { padding-right: 44px; }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+    }
+
+    .password-toggle:hover { color: var(--text); }
+
+    /* Strength meter */
+    .strength-meter {
+      margin-top: 8px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .strength-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
+
+    .strength-label {
+      font-size: 11px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    /* Terms */
+    .terms-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .terms-text a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .terms-text a:hover { text-decoration: underline; }
+
+    /* Success screen */
+    .register-success {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .success-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--success-bg);
+      border: 2px solid var(--success-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      animation: scaleIn 0.4s ease both;
+    }
+
+    .register-success h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+    }
+
+    .register-success p {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 320px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    /* Trust row */
+    .auth-trust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .auth-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-faint);
+      font-weight: 500;
+    }
+
+    .auth-trust-item svg {
+      width: 13px;
+      height: 13px;
+      color: var(--success);
+    }
+
+    .auth-bottom-link {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .auth-bottom-link a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-bottom-link a:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .auth-page { grid-template-columns: 1fr; }
+      .auth-left  { display: none; }
+      .auth-right {
+        padding: 20px 20px 40px;
+        min-height: 100vh;
+        justify-content: flex-start;
+        padding-top: 68px;
+      }
+      .auth-form-wrap { max-width: 100%; padding: 0; }
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Mobile topbar row — logo left, doesn't interfere with toggle */
+    .auth-mobile-topbar {
+      display: none;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-right: 52px; /* leaves room for the absolute theme toggle */
+    }
+
+    @media (max-width: 768px) {
+      .auth-mobile-topbar { display: flex; }
+    }
+
+    .auth-mobile-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .auth-mobile-logo .logo-mark-sm {
+      width: 36px;
+      height: 36px;
+      background: var(--gradient-red);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 17px;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-accent);
+    }
+
+    .auth-mobile-logo .logo-name-sm {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.04em;
+    }
+
+    .auth-mobile-logo .logo-name-sm span { color: var(--accent); }
+
+    /* Auth page theme button — proper styling without inline override */
+    .auth-theme-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .auth-theme-btn:hover {
+      background: var(--surface-3);
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+  </style>
+</head>
+
+<body>
+<div id="toast-container"></div>
+
+<div class="auth-page">
+
+  <!-- ══ LEFT PANEL ══════════════════════════════════════ -->
+  <div class="auth-left">
+    <div class="auth-left-grid"></div>
+    <div class="auth-left-content">
+
+      <a href="index.html" class="auth-logo">
+        <div class="logo-mark">T</div>
+        <span class="logo-name">Trade<span>Ex</span></span>
+      </a>
+
+      <div class="auth-left-hero">
+        <h2>Start Your<br /><span>Wealth Journey</span><br />Today</h2>
+        <p>Join thousands of Americans already earning with TradeEx. Pick a plan, invest, and collect your returns in 7 days.</p>
+
+        <div class="plans-preview">
+          <div class="plan-preview-row">
+            <div class="plan-left">
+              <div class="plan-dot" style="background:#cd7f32"></div>
+              <div>
+                <div class="pname">Bronze</div>
+                <div class="pinvest">Invest $150</div>
+              </div>
+            </div>
+            <div class="preturn">→ $2,000</div>
+          </div>
+          <div class="plan-preview-row">
+            <div class="plan-left">
+              <div class="plan-dot" style="background:#aaa9ad"></div>
+              <div>
+                <div class="pname">Silver</div>
+                <div class="pinvest">Invest $200</div>
+              </div>
+            </div>
+            <div class="preturn">→ $4,000</div>
+          </div>
+          <div class="plan-preview-row">
+            <div class="plan-left">
+              <div class="plan-dot" style="background:#ffd700"></div>
+              <div>
+                <div class="pname">Gold</div>
+                <div class="pinvest">Invest $300</div>
+              </div>
+            </div>
+            <div class="preturn">→ $6,000</div>
+          </div>
+          <div class="plan-preview-row">
+            <div class="plan-left">
+              <div class="plan-dot" style="background:#e5e4e2"></div>
+              <div>
+                <div class="pname">Platinum</div>
+                <div class="pinvest">Invest $400</div>
+              </div>
+            </div>
+            <div class="preturn">→ $8,000</div>
+          </div>
+          <div class="plan-preview-row">
+            <div class="plan-left">
+              <div class="plan-dot" style="background:#b9f2ff"></div>
+              <div>
+                <div class="pname">Diamond</div>
+                <div class="pinvest">Invest $500</div>
+              </div>
+            </div>
+            <div class="preturn">→ $10,000</div>
+          </div>
+          <div class="plan-preview-row">
+            <div class="plan-left">
+              <div class="plan-dot" style="background:#ffd700"></div>
+              <div>
+                <div class="pname">Heroic</div>
+                <div class="pinvest">Invest $1,000</div>
+              </div>
+            </div>
+            <div class="preturn">→ $20,000</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-left-footer">
+        <span>© 2025 TradeEx</span>
+        <div class="dot"></div>
+        <span>Returns in 7 Days</span>
+        <div class="dot"></div>
+        <span>SSL Secured</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ RIGHT PANEL ═════════════════════════════════════ -->
+  <div class="auth-right">
+
+    <div class="auth-right-top">
+      <button class="theme-toggle auth-theme-btn" id="themeToggle" aria-label="Toggle theme">
+        <i data-lucide="moon" class="icon-moon" style="width:16px;height:16px"></i>
+        <i data-lucide="sun"  class="icon-sun"  style="width:16px;height:16px"></i>
+      </button>
+    </div>
+
+    <div class="auth-form-wrap">
+
+      <!-- Mobile header row: logo left, spacing right (toggle is absolute top-right) -->
+      <div class="auth-mobile-topbar">
+        <a href="index.html" class="auth-mobile-logo">
+          <div class="logo-mark-sm">T</div>
+          <span class="logo-name-sm">Trade<span>Ex</span></span>
+        </a>
+      </div>
+
+      <!-- Registration form -->
+      <div id="registerFormWrap">
+
+        <div class="auth-form-header">
+          <div class="eyebrow">Free Account</div>
+          <h1>Create Your Account</h1>
+          <p>Already have an account? <a href="login.html">Log in here</a></p>
+        </div>
+
+        <form id="registerForm" novalidate>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <i data-lucide="user" class="input-icon left" style="width:16px;height:16px"></i>
+              <input
+                type="text"
+                id="fullName"
+                class="form-input has-left-icon"
+                placeholder="John Doe"
+                autocomplete="name"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <i data-lucide="mail" class="input-icon left" style="width:16px;height:16px"></i>
+              <input
+                type="email"
+                id="email"
+                class="form-input has-left-icon"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label" for="password">Password <span class="required">*</span></label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="password"
+                class="form-input"
+                placeholder="Min. 8 characters"
+                autocomplete="new-password"
+                required
+              />
+              <button type="button" class="password-toggle" data-toggle-password="password" aria-label="Toggle password">
+                <i data-lucide="eye-off" style="width:16px;height:16px"></i>
+              </button>
+            </div>
+            <!-- Strength meter -->
+            <div class="strength-meter">
+              <div class="strength-bar">
+                <div class="strength-fill" id="strengthFill"></div>
+              </div>
+              <span class="strength-label" id="strengthLabel"></span>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label class="form-label" for="confirmPassword">Confirm Password <span class="required">*</span></label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="confirmPassword"
+                class="form-input"
+                placeholder="Repeat your password"
+                autocomplete="new-password"
+                required
+              />
+              <button type="button" class="password-toggle" data-toggle-password="confirmPassword" aria-label="Toggle password">
+                <i data-lucide="eye-off" style="width:16px;height:16px"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <div class="form-group" style="margin-bottom:24px;">
+            <label class="form-check" style="align-items:flex-start;">
+              <input type="checkbox" id="terms" style="margin-top:3px;" />
+              <span class="terms-text">
+                I agree to TradeEx's <a href="#">Terms of Service</a> and
+                <a href="#">Privacy Policy</a>. I understand that investment returns
+                are subject to the selected plan terms.
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" id="registerBtn" class="btn btn-accent btn-full btn-lg">
+            <i data-lucide="rocket" style="width:18px;height:18px"></i>
+            <span class="btn-text">Create Free Account</span>
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- Success screen (hidden until registration completes) -->
+      <div id="registerSuccess" class="register-success d-none">
+        <div class="success-icon-wrap">
+          <i data-lucide="mail-check" style="width:32px;height:32px;color:var(--success)"></i>
+        </div>
+        <h2>Check Your Email!</h2>
+        <p>
+          We've sent a verification link to your email address.
+          Click the link to activate your account and start investing.
+        </p>
+        <a href="login.html" class="btn btn-primary btn-lg" style="display:inline-flex;">
+          <i data-lucide="log-in" style="width:18px;height:18px"></i>
+          Go to Login
+        </a>
+        <p style="margin-top:16px;font-size:12px;color:var(--text-faint);">
+          Didn't receive it? Check your spam folder.
+        </p>
+      </div>
+
+      <!-- Trust + bottom link -->
+      <div class="auth-trust">
+        <div class="auth-trust-item">
+          <i data-lucide="shield-check"></i> SSL Encrypted
+        </div>
+        <div class="auth-trust-item">
+          <i data-lucide="lock"></i> No hidden fees
+        </div>
+        <div class="auth-trust-item">
+          <i data-lucide="flag"></i> US Platform
+        </div>
+      </div>
+
+      <div class="auth-bottom-link">
+        Already have an account? <a href="login.html">Log in</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── RUNS IMMEDIATELY — no Supabase dependency ──────────
+  lucide.createIcons();
+
+  // Theme
+  const html = document.documentElement;
+  html.setAttribute('data-theme', localStorage.getItem('tradex-theme') || 'light');
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tradex-theme', next);
+    lucide.createIcons();
+  });
+
+  // Password toggles — independent of Supabase
+  document.querySelectorAll('[data-toggle-password]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById(btn.dataset.togglePassword);
+      if (!input) return;
+      const isText = input.type === 'text';
+      input.type = isText ? 'password' : 'text';
+      btn.innerHTML = isText
+        ? '<i data-lucide="eye-off" style="width:16px;height:16px"></i>'
+        : '<i data-lucide="eye" style="width:16px;height:16px"></i>';
+      lucide.createIcons();
+    });
+  });
+
+  // Password strength meter — independent of Supabase
+  document.getElementById('password')?.addEventListener('input', function() {
+    const val = this.value;
+    const fill = document.getElementById('strengthFill');
+    const lbl  = document.getElementById('strengthLabel');
+    if (!fill || !lbl) return;
+
+    if (!val) { fill.style.width = '0%'; lbl.textContent = ''; return; }
+
+    let score = 0;
+    if (val.length >= 8)           score++;
+    if (/[A-Z]/.test(val))         score++;
+    if (/[0-9]/.test(val))         score++;
+    if (/[^A-Za-z0-9]/.test(val))  score++;
+
+    const map = {
+      1: { label: 'Weak',   color: 'var(--error)',   width: '25%' },
+      2: { label: 'Fair',   color: 'var(--warning)', width: '50%' },
+      3: { label: 'Good',   color: 'var(--info)',    width: '75%' },
+      4: { label: 'Strong', color: 'var(--success)', width: '100%' },
+    };
+    const s = map[score] || map[1];
+    fill.style.width      = s.width;
+    fill.style.background = s.color;
+    lbl.textContent       = s.label;
+    lbl.style.color       = s.color;
+  });
+</script>
+
+<script type="module">
+  import { initRegister } from './assets/js/auth.js';
+  await initRegister();
+</script>
+</body>
+</html>

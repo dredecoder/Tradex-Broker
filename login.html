@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log In — TradeEx</title>
+
+  <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/theme.css" />
+
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ── LEFT PANEL ── */
+    .auth-left {
+      background: var(--navy-900);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 48px;
+    }
+
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(27,79,138,0.30) 0%, transparent 70%);
+      top: -150px;
+      right: -150px;
+      pointer-events: none;
+    }
+
+    .auth-left::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(178,34,52,0.15) 0%, transparent 70%);
+      bottom: -100px;
+      left: -50px;
+      pointer-events: none;
+    }
+
+    .auth-left-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+
+    .auth-left-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      margin-bottom: auto;
+    }
+
+    .auth-logo .logo-mark {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-red);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 20px;
+      color: white;
+      box-shadow: var(--shadow-accent);
+    }
+
+    .auth-logo .logo-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.04em;
+    }
+
+    .auth-logo .logo-name span { color: var(--red-400); }
+
+    .auth-left-hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 0;
+    }
+
+    .auth-left-hero h2 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .auth-left-hero h2 span {
+      background: var(--gradient-red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .auth-left-hero p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.50);
+      line-height: 1.7;
+      max-width: 340px;
+      margin-bottom: 36px;
+    }
+
+    .auth-stat-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .auth-stat-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: var(--transition-fast);
+    }
+
+    .auth-stat-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .auth-stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .auth-stat-card .stat-info .val {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.03em;
+    }
+
+    .auth-stat-card .stat-info .lbl {
+      font-size: 12px;
+      color: rgba(255,255,255,0.40);
+      margin-top: 1px;
+    }
+
+    .auth-left-footer {
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .auth-left-footer span {
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .auth-left-footer .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.20);
+    }
+
+    /* ── RIGHT PANEL ── */
+    .auth-right {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      position: relative;
+      overflow-y: auto;
+      min-height: 100vh;
+    }
+
+    .auth-right-top {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .auth-form-wrap {
+      width: 100%;
+      max-width: 420px;
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    /* Mobile logo row — logo left, clear of toggle */
+    .auth-mobile-topbar {
+      display: none;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-right: 52px;
+    }
+
+    @media (max-width: 768px) {
+      .auth-mobile-topbar { display: flex; }
+    }
+
+    .auth-mobile-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .auth-mobile-logo .logo-mark-sm {
+      width: 36px;
+      height: 36px;
+      background: var(--gradient-red);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 17px;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-accent);
+    }
+
+    .auth-mobile-logo .logo-name-sm {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.04em;
+    }
+
+    .auth-mobile-logo .logo-name-sm span { color: var(--accent); }
+
+    .auth-form-header {
+      margin-bottom: 32px;
+    }
+
+    .auth-form-header .eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .auth-form-header .eyebrow::before {
+      content: '';
+      width: 16px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    .auth-form-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .auth-form-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .auth-form-header p a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-form-header p a:hover {
+      text-decoration: underline;
+    }
+
+    /* Input wrapper with show/hide password */
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper .form-input {
+      padding-right: 44px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .password-toggle:hover { color: var(--text); }
+
+    /* Forgot password link */
+    .forgot-link {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      margin-left: auto;
+      display: block;
+      text-align: right;
+    }
+
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .auth-divider span {
+      font-size: 12px;
+      color: var(--text-faint);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Bottom link */
+    .auth-bottom-link {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .auth-bottom-link a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-bottom-link a:hover { text-decoration: underline; }
+
+    /* Trust row at bottom */
+    .auth-trust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .auth-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-faint);
+      font-weight: 500;
+    }
+
+    .auth-trust-item svg {
+      width: 13px;
+      height: 13px;
+      color: var(--success);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .auth-page  { grid-template-columns: 1fr; }
+      .auth-left  { display: none; }
+      .auth-right {
+        padding: 28px 20px;
+        justify-content: flex-start;
+        padding-top: 72px;
+      }
+      .auth-form-wrap { max-width: 100%; }
+    }
+
+    .auth-mobile-logo {
+      display: none;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      margin-bottom: 32px;
+    }
+
+    .auth-mobile-logo .logo-mark-sm {
+      width: 36px;
+      height: 36px;
+      background: var(--gradient-red);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 17px;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-accent);
+    }
+
+    .auth-mobile-logo .logo-name-sm {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.04em;
+    }
+
+    .auth-mobile-logo .logo-name-sm span { color: var(--accent); }
+
+    /* Auth page theme button */
+    .auth-theme-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .auth-theme-btn:hover {
+      background: var(--surface-3);
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+  </style>
+</head>
+
+<body>
+<div id="toast-container"></div>
+
+<div class="auth-page">
+
+  <!-- ══ LEFT PANEL ══════════════════════════════════════ -->
+  <div class="auth-left">
+    <div class="auth-left-grid"></div>
+    <div class="auth-left-content">
+
+      <a href="index.html" class="auth-logo">
+        <div class="logo-mark">T</div>
+        <span class="logo-name">Trade<span>Ex</span></span>
+      </a>
+
+      <div class="auth-left-hero">
+        <h2>Welcome<br />Back to <span>TradeEx</span></h2>
+        <p>Your investments are working hard for you. Log in to check your returns, manage your portfolio, and invest more.</p>
+
+        <div class="auth-stat-cards">
+          <div class="auth-stat-card">
+            <div class="auth-stat-icon" style="background:rgba(15,123,74,0.15);">
+              <i data-lucide="trending-up" style="width:20px;height:20px;color:#4ade80"></i>
+            </div>
+            <div class="stat-info">
+              <div class="val">$2M+</div>
+              <div class="lbl">Total paid to investors</div>
+            </div>
+          </div>
+          <div class="auth-stat-card">
+            <div class="auth-stat-icon" style="background:rgba(27,79,138,0.20);">
+              <i data-lucide="users" style="width:20px;height:20px;color:var(--navy-300)"></i>
+            </div>
+            <div class="stat-info">
+              <div class="val">10,000+</div>
+              <div class="lbl">Active investors</div>
+            </div>
+          </div>
+          <div class="auth-stat-card">
+            <div class="auth-stat-icon" style="background:rgba(178,34,52,0.15);">
+              <i data-lucide="shield-check" style="width:20px;height:20px;color:var(--red-300)"></i>
+            </div>
+            <div class="stat-info">
+              <div class="val">100%</div>
+              <div class="lbl">Secure & encrypted</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-left-footer">
+        <span>© 2025 TradeEx</span>
+        <div class="dot"></div>
+        <span>US Investment Platform</span>
+        <div class="dot"></div>
+        <span>SSL Secured</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ RIGHT PANEL ═════════════════════════════════════ -->
+  <div class="auth-right">
+
+    <!-- Theme toggle top right -->
+    <div class="auth-right-top">
+      <button class="theme-toggle auth-theme-btn" id="themeToggle" aria-label="Toggle theme">
+        <i data-lucide="moon" class="icon-moon" style="width:16px;height:16px"></i>
+        <i data-lucide="sun"  class="icon-sun"  style="width:16px;height:16px"></i>
+      </button>
+    </div>
+
+    <div class="auth-form-wrap">
+
+      <!-- Mobile logo row -->
+      <div class="auth-mobile-topbar">
+        <a href="index.html" class="auth-mobile-logo">
+          <div class="logo-mark-sm">T</div>
+          <span class="logo-name-sm">Trade<span>Ex</span></span>
+        </a>
+      </div>
+
+      <!-- Header -->
+      <div class="auth-form-header">
+        <div class="eyebrow">Secure Login</div>
+        <h1>Log In to Your Account</h1>
+        <p>Don't have an account? <a href="register.html">Create one free</a></p>
+      </div>
+
+      <!-- Form -->
+      <form id="loginForm" novalidate>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <i data-lucide="mail" class="input-icon left" style="width:16px;height:16px"></i>
+            <input
+              type="email"
+              id="email"
+              class="form-input has-left-icon"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <label class="form-label" for="password" style="margin-bottom:0;">Password <span class="required">*</span></label>
+            <a href="#" class="forgot-link" id="forgotLink" style="position:static;display:inline;">Forgot password?</a>
+          </div>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              class="form-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+            <button type="button" class="password-toggle" data-toggle-password="password" aria-label="Toggle password">
+              <i data-lucide="eye-off" style="width:16px;height:16px"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:24px;">
+          <label class="form-check">
+            <input type="checkbox" id="remember" />
+            <span class="form-check-label">Keep me signed in</span>
+          </label>
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn btn-accent btn-full btn-lg">
+          <i data-lucide="log-in" style="width:18px;height:18px"></i>
+          <span class="btn-text">Log In to TradeEx</span>
+        </button>
+
+      </form>
+
+      <!-- Forgot password inline panel -->
+      <div id="forgotPanel" class="d-none" style="margin-top:20px;">
+        <div class="card" style="padding:20px;">
+          <div id="forgotFormWrap">
+            <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">
+              Enter your email and we'll send you a password reset link.
+            </p>
+            <form id="forgotForm" novalidate>
+              <div class="form-group">
+                <label class="form-label" for="forgotEmail">Email Address</label>
+                <input type="email" id="forgotEmail" class="form-input" placeholder="you@example.com" />
+              </div>
+              <div style="display:flex;gap:10px;">
+                <button type="submit" id="forgotBtn" class="btn btn-primary btn-sm flex-1">
+                  <span class="btn-text">Send Reset Link</span>
+                </button>
+                <button type="button" id="cancelForgot" class="btn btn-outline btn-sm">Cancel</button>
+              </div>
+            </form>
+          </div>
+          <div id="forgotSuccess" class="d-none" style="text-align:center;padding:8px 0;">
+            <i data-lucide="mail-check" style="width:40px;height:40px;color:var(--success);margin:0 auto 12px;display:block;"></i>
+            <p style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">Check your inbox</p>
+            <p style="font-size:13px;color:var(--text-muted);">We sent a reset link to your email.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust row -->
+      <div class="auth-trust">
+        <div class="auth-trust-item">
+          <i data-lucide="shield-check"></i> SSL Encrypted
+        </div>
+        <div class="auth-trust-item">
+          <i data-lucide="lock"></i> Secure Login
+        </div>
+        <div class="auth-trust-item">
+          <i data-lucide="flag"></i> US Platform
+        </div>
+      </div>
+
+      <!-- Bottom link -->
+      <div class="auth-bottom-link">
+        New to TradeEx? <a href="register.html">Create a free account</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── RUNS IMMEDIATELY — no Supabase dependency ──────────
+  lucide.createIcons();
+
+  // Theme
+  const html = document.documentElement;
+  html.setAttribute('data-theme', localStorage.getItem('tradex-theme') || 'light');
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tradex-theme', next);
+    lucide.createIcons();
+  });
+
+  // Password toggle — independent of Supabase
+  document.querySelectorAll('[data-toggle-password]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById(btn.dataset.togglePassword);
+      if (!input) return;
+      const isText = input.type === 'text';
+      input.type = isText ? 'password' : 'text';
+      btn.innerHTML = isText
+        ? '<i data-lucide="eye-off" style="width:16px;height:16px"></i>'
+        : '<i data-lucide="eye" style="width:16px;height:16px"></i>';
+      lucide.createIcons();
+    });
+  });
+
+  // Forgot password toggle — independent of Supabase
+  const forgotLink   = document.getElementById('forgotLink');
+  const forgotPanel  = document.getElementById('forgotPanel');
+  const cancelForgot = document.getElementById('cancelForgot');
+
+  forgotLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    forgotPanel.classList.toggle('d-none');
+    const forgotEmailEl = document.getElementById('forgotEmail');
+    if (forgotEmailEl) {
+      const loginEmail = document.getElementById('email')?.value;
+      if (loginEmail) forgotEmailEl.value = loginEmail;
+    }
+  });
+
+  cancelForgot?.addEventListener('click', () => {
+    forgotPanel.classList.add('d-none');
+  });
+</script>
+
+<script type="module">
+  import { initLogin, initForgotPassword } from './assets/js/auth.js';
+  await initLogin();
+  await initForgotPassword();
+</script>
+</body>
+</html>
