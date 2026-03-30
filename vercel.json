@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options",  "value": "nosniff" },
+        { "key": "X-Frame-Options",          "value": "DENY" },
+        { "key": "X-XSS-Protection",         "value": "1; mode=block" },
+        { "key": "Referrer-Policy",          "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/dashboard",      "destination": "/dashboard/index.html" },
+    { "source": "/deposit",        "destination": "/deposit/index.html" },
+    { "source": "/withdraw",       "destination": "/withdraw/index.html" },
+    { "source": "/plans",          "destination": "/plans/index.html" },
+    { "source": "/portfolio",      "destination": "/portfolio/index.html" },
+    { "source": "/transactions",   "destination": "/transactions/index.html" },
+    { "source": "/profile",        "destination": "/profile/index.html" },
+    { "source": "/notifications",  "destination": "/notifications/index.html" },
+    { "source": "/admin",          "destination": "/admin/index.html" },
+    { "source": "/admin/users",    "destination": "/admin/users.html" },
+    { "source": "/admin/deposits", "destination": "/admin/deposits.html" },
+    { "source": "/admin/withdrawals", "destination": "/admin/withdrawals.html" },
+    { "source": "/admin/settings", "destination": "/admin/settings.html" }
+  ]
+}
