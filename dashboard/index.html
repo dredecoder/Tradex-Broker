@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — TradeEx</title>
+  <link rel="icon" href="../assets/img/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+
+  <style>
+    /* ── INVESTMENT CARDS ─────────────────────────── */
+    .investment-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      transition: var(--transition-base);
+    }
+
+    .investment-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-strong);
+    }
+
+    .inv-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+    }
+
+    .inv-plan-info {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .inv-tier-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .inv-plan-name {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .inv-date {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .inv-amounts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      background: var(--surface-2);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+
+    .inv-amount-col {
+      flex: 1;
+      text-align: center;
+    }
+
+    .inv-amount-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+      margin-bottom: 3px;
+    }
+
+    .inv-amount-val {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .inv-amount-val.success { color: var(--success); }
+    .inv-amount-val.accent  { color: var(--accent); }
+
+    .inv-arrow {
+      color: var(--text-faint);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .inv-progress-section {
+      margin-bottom: var(--space-4);
+    }
+
+    .inv-progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-2);
+    }
+
+    .inv-progress-label {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .inv-progress-pct {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      color: var(--success);
+    }
+
+    /* Countdown grid */
+    .inv-countdown {
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .countdown-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 44px;
+    }
+
+    .cdown-val {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .cdown-lbl {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--text-faint);
+      margin-top: 3px;
+    }
+
+    .countdown-sep {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      color: var(--text-faint);
+      margin-bottom: 14px;
+    }
+
+    .countdown-matured {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    /* ── CHART SECTION ───────────────────────────── */
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .chart-body {
+      padding: 0;
+      height: 380px;
+    }
+
+    .chart-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* ── WELCOME BANNER ──────────────────────────── */
+    .welcome-banner {
+      background: var(--gradient-navy);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6) var(--space-8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+      right: -60px;
+      top: -80px;
+      pointer-events: none;
+    }
+
+    .welcome-banner::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(178,34,52,0.15) 0%, transparent 70%);
+      left: 30%;
+      bottom: -60px;
+      pointer-events: none;
+    }
+
+    .welcome-text { position: relative; z-index: 1; }
+
+    .welcome-text .greeting {
+      font-size: var(--text-sm);
+      color: rgba(255,255,255,0.55);
+      margin-bottom: var(--space-1);
+    }
+
+    .welcome-text h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-2);
+    }
+
+    .welcome-text h2 span { color: var(--red-300); }
+
+    .welcome-actions {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: var(--space-3);
+      flex-shrink: 0;
+    }
+
+    /* ── PLAN CARD HINT ──────────────────────────── */
+    .plan-hint {
+      background: linear-gradient(135deg, rgba(178,34,52,0.08), rgba(10,35,66,0.05));
+      border: 1px dashed var(--accent);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .plan-hint-text {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+
+    .plan-hint-text strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 768px) {
+      .welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-4);
+        padding: var(--space-5);
+      }
+      .welcome-actions { width: 100%; }
+      .welcome-actions .btn { flex: 1; justify-content: center; }
+      .inv-amounts { flex-wrap: wrap; }
+      .countdown-grid { gap: var(--space-1); }
+      .cdown-val { font-size: var(--text-lg); }
+    }
+
+    /* ── NOTIFICATION DROPDOWN RESPONSIVE ─────── */
+    .notif-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 340px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      z-index: var(--z-dropdown);
+      animation: fadeInDown 0.2s ease;
+      overflow: hidden;
+    }
+
+    /* On mobile — full width anchored to viewport edges */
+    @media (max-width: 540px) {
+      .notif-dropdown {
+        position: fixed;
+        top: calc(var(--topbar-height) + 8px);
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-height: 70vh;
+        overflow-y: auto;
+        border-radius: var(--radius-xl);
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════════════
+     APP SHELL
+════════════════════════════════════════════════════ -->
+<div class="app-shell">
+
+  <!-- ══ SIDEBAR ════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Logo -->
+    <a href="../index.html" class="sidebar-logo">
+      <div class="logo-mark">T</div>
+      <span class="logo-text">Trade<span>Ex</span></span>
+    </a>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Main</div>
+
+        <a href="index.html" class="nav-item active" data-tooltip="Dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span class="nav-label">Dashboard</span>
+        </a>
+
+        <a href="../deposit/index.html" class="nav-item" data-tooltip="Deposit">
+          <i data-lucide="arrow-down-circle"></i>
+          <span class="nav-label">Deposit</span>
+        </a>
+
+        <a href="../withdraw/index.html" class="nav-item" data-tooltip="Withdraw">
+          <i data-lucide="arrow-up-circle"></i>
+          <span class="nav-label">Withdraw</span>
+        </a>
+
+        <a href="../plans/index.html" class="nav-item" data-tooltip="Invest">
+          <i data-lucide="trending-up"></i>
+          <span class="nav-label">Invest</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Account</div>
+
+        <a href="../portfolio/index.html" class="nav-item" data-tooltip="Portfolio">
+          <i data-lucide="pie-chart"></i>
+          <span class="nav-label">Portfolio</span>
+        </a>
+
+        <a href="../transactions/index.html" class="nav-item" data-tooltip="Transactions">
+          <i data-lucide="receipt"></i>
+          <span class="nav-label">Transactions</span>
+        </a>
+
+        <a href="../profile/index.html" class="nav-item" data-tooltip="Profile">
+          <i data-lucide="user-circle"></i>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="../notifications/index.html" class="nav-item" data-tooltip="Notifications">
+          <i data-lucide="bell"></i>
+          <span class="nav-label">Notifications</span>
+          <span id="sidebarNotifBadge" style="background:var(--accent);color:white;font-size:10px;font-weight:800;padding:1px 6px;border-radius:999px;margin-left:auto;display:none;"></span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <a href="../profile/index.html" class="sidebar-user">
+        <div class="avatar avatar-sm" id="sidebarAvatar">TX</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarUserName">Loading...</div>
+          <div class="user-role" id="sidebarUserRole">Investor</div>
+        </div>
+      </a>
+      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Collapse sidebar">
+        <i data-lucide="chevrons-left" style="width:18px;height:18px"></i>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ══ MAIN CONTENT ═══════════════════════════════════ -->
+  <div class="app-content" id="appContent">
+
+    <!-- TOPBAR -->
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+          <i data-lucide="menu" style="width:20px;height:20px"></i>
+        </button>
+        <span class="topbar-title">Dashboard</span>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Theme toggle -->
+        <button class="theme-toggle topbar-btn" id="themeToggle" aria-label="Toggle theme">
+          <i data-lucide="moon" class="icon-moon" style="width:18px;height:18px"></i>
+          <i data-lucide="sun"  class="icon-sun"  style="width:18px;height:18px"></i>
+        </button>
+
+        <!-- Notifications bell -->
+        <div style="position:relative;flex-shrink:0;">
+          <button class="topbar-btn" id="notifBellBtn" aria-label="Notifications"
+            style="position:relative;width:38px;height:38px;border-radius:var(--radius-md);background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;">
+            <i data-lucide="bell" style="width:18px;height:18px"></i>
+            <span id="notifBadge" style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;background:var(--accent);color:white;font-size:10px;font-weight:800;border-radius:999px;display:none;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg);">0</span>
+          </button>
+          <div class="notif-dropdown hidden" id="notifDropdown" style="width:360px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--border-light);">
+              <span style="font-family:var(--font-display);font-size:var(--text-md);font-weight:700;color:var(--text);">Notifications</span>
+              <button onclick="document.getElementById('notifDropdown').classList.add('hidden')"
+                style="background:none;border:none;color:var(--text-muted);cursor:pointer;">
+                <i data-lucide="x" style="width:16px;height:16px"></i>
+              </button>
+            </div>
+            <div id="notifDropdownList" style="max-height:380px;overflow-y:auto;">
+              <div style="padding:32px 16px;text-align:center;color:var(--text-muted);font-size:14px;">Loading...</div>
+            </div>
+            <div style="padding:var(--space-3) var(--space-5);border-top:1px solid var(--border-light);text-align:center;">
+              <a href="../notifications/index.html" style="font-size:var(--text-sm);font-weight:600;color:var(--navy-500);">View all notifications →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- User -->
+        <div style="position:relative;flex-shrink:0;">
+          <button class="topbar-user" id="userMenuBtn">
+            <div class="avatar avatar-sm" id="topbarAvatar">TX</div>
+            <span class="user-name-topbar hide-mobile" id="topbarUserName">User</span>
+            <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted)"></i>
+          </button>
+
+          <!-- User dropdown -->
+          <div class="notif-dropdown hidden" id="userDropdown" style="width:200px;min-width:180px;">
+            <div style="padding:var(--space-3) var(--space-4);">
+              <div style="font-size:var(--text-xs);color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Account</div>
+            </div>
+            <div style="padding:0 var(--space-2) var(--space-2);">
+              <a href="../profile/index.html" class="nav-item" style="color:var(--text-secondary);border-radius:var(--radius-md);">
+                <i data-lucide="user-circle"></i>
+                <span>Profile</span>
+              </a>
+              <a href="../transactions/index.html" class="nav-item" style="color:var(--text-secondary);border-radius:var(--radius-md);">
+                <i data-lucide="receipt"></i>
+                <span>Transactions</span>
+              </a>
+              <div style="height:1px;background:var(--border-light);margin:var(--space-2) 0;"></div>
+              <button data-logout class="nav-item" style="width:100%;color:var(--error);border-radius:var(--radius-md);">
+                <i data-lucide="log-out"></i>
+                <span>Log Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-main">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner animate-fade-in">
+        <div class="welcome-text">
+          <div class="greeting">Good day,</div>
+          <h2>Welcome back, <span id="welcomeName">Investor</span> 👋</h2>
+          <span class="badge badge-neutral" id="kycBadge">KYC Pending</span>
+        </div>
+        <div class="welcome-actions">
+          <a href="../deposit/index.html" class="btn btn-accent">
+            <i data-lucide="plus-circle" style="width:16px;height:16px"></i>
+            Deposit
+          </a>
+          <a href="../plans/index.html" class="btn btn-outline" style="border-color:rgba(255,255,255,0.25);color:white;">
+            <i data-lucide="trending-up" style="width:16px;height:16px"></i>
+            Invest
+          </a>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stats-grid">
+        <div class="stat-card animate-fade-in-up delay-100">
+          <div class="stat-icon">
+            <i data-lucide="wallet" style="width:20px;height:20px"></i>
+          </div>
+          <div class="stat-label">Available Balance</div>
+          <div class="stat-value money" id="statBalance">$0.00</div>
+          <div class="stat-change up">
+            <i data-lucide="trending-up" style="width:11px;height:11px"></i>
+            Ready to invest
+          </div>
+        </div>
+
+        <div class="stat-card accent animate-fade-in-up delay-200">
+          <div class="stat-icon">
+            <i data-lucide="gift" style="width:20px;height:20px"></i>
+          </div>
+          <div class="stat-label">Bonus Balance</div>
+          <div class="stat-value money" id="statBonus">$0.00</div>
+          <div class="stat-change up">
+            <i data-lucide="star" style="width:11px;height:11px"></i>
+            Bonus credits
+          </div>
+        </div>
+
+        <div class="stat-card success animate-fade-in-up delay-300">
+          <div class="stat-icon">
+            <i data-lucide="bar-chart-2" style="width:20px;height:20px"></i>
+          </div>
+          <div class="stat-label">Total Invested</div>
+          <div class="stat-value money" id="statInvested">$0.00</div>
+          <div class="stat-change up">
+            <i data-lucide="trending-up" style="width:11px;height:11px"></i>
+            All time
+          </div>
+        </div>
+
+        <div class="stat-card warning animate-fade-in-up delay-400">
+          <div class="stat-icon">
+            <i data-lucide="dollar-sign" style="width:20px;height:20px"></i>
+          </div>
+          <div class="stat-label">Total Profit</div>
+          <div class="stat-value money" id="statProfit">$0.00</div>
+          <div class="stat-change up">
+            <i data-lucide="trending-up" style="width:11px;height:11px"></i>
+            Earned so far
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="section animate-fade-in-up delay-200">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Quick Actions</div>
+            <div class="section-subtitle">Everything you need in one tap</div>
+          </div>
+        </div>
+        <div class="quick-actions-grid">
+          <a href="../deposit/index.html" class="quick-action">
+            <div class="qa-icon"><i data-lucide="arrow-down-circle" style="width:22px;height:22px"></i></div>
+            <div class="qa-label">Deposit Funds</div>
+            <div class="qa-desc">Add via Apple Gift Card</div>
+          </a>
+          <a href="../withdraw/index.html" class="quick-action">
+            <div class="qa-icon"><i data-lucide="arrow-up-circle" style="width:22px;height:22px"></i></div>
+            <div class="qa-label">Withdraw</div>
+            <div class="qa-desc">Cash out your earnings</div>
+          </a>
+          <a href="../plans/index.html" class="quick-action">
+            <div class="qa-icon"><i data-lucide="trending-up" style="width:22px;height:22px"></i></div>
+            <div class="qa-label">Invest Now</div>
+            <div class="qa-desc">Pick an investment plan</div>
+          </a>
+          <a href="../portfolio/index.html" class="quick-action">
+            <div class="qa-icon"><i data-lucide="pie-chart" style="width:22px;height:22px"></i></div>
+            <div class="qa-label">View Portfolio</div>
+            <div class="qa-desc">Track your investments</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Active Investments + Chart -->
+      <div class="dashboard-grid">
+
+        <!-- Active Investments -->
+        <div class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title">
+                Active Investments
+                <span class="badge badge-success" id="activeInvestCount" style="margin-left:8px;">0</span>
+              </div>
+              <div class="section-subtitle">Live plans with real-time countdown</div>
+            </div>
+            <a href="../portfolio/index.html" class="btn btn-outline btn-sm">View all</a>
+          </div>
+
+          <div id="investmentsEmpty" class="d-none">
+            <div class="plan-hint">
+              <div class="plan-hint-text">
+                You have <strong>no active investments</strong> yet.<br />
+                Choose a plan and start earning today.
+              </div>
+              <a href="../plans/index.html" class="btn btn-accent btn-sm" style="flex-shrink:0;">
+                <i data-lucide="plus" style="width:14px;height:14px"></i>
+                Start Investing
+              </a>
+            </div>
+          </div>
+
+          <div id="investmentsList" style="display:flex;flex-direction:column;gap:var(--space-4);">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- BTC/USD Chart -->
+        <div class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Market Overview</div>
+              <div class="section-subtitle">BTC/USD — Live price chart</div>
+            </div>
+            <span class="badge badge-success" style="gap:5px;">
+              <span style="width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;display:inline-block;"></span>
+              Live
+            </span>
+          </div>
+          <div class="chart-card">
+            <div class="chart-body">
+              <iframe
+                id="tradingviewChart"
+                src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BITSTAMP%3ABTCUSD&interval=D&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=light&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=0&locale=en"
+                allowtransparency="true"
+                scrolling="no"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="section animate-fade-in-up">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Recent Transactions</div>
+            <div class="section-subtitle">Your latest activity</div>
+          </div>
+          <a href="../transactions/index.html" class="btn btn-outline btn-sm">View all</a>
+        </div>
+
+        <div class="card" style="padding:0;">
+          <div id="txEmpty" class="d-none">
+            <div class="empty-state">
+              <i data-lucide="receipt" class="empty-icon"></i>
+              <div class="empty-title">No transactions yet</div>
+              <div class="empty-text">Your transaction history will appear here once you make a deposit.</div>
+              <a href="../deposit/index.html" class="btn btn-accent btn-sm">Make a Deposit</a>
+            </div>
+          </div>
+
+          <div class="table-wrapper" style="border:none;border-radius:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Transaction</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="txTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /app-content -->
+
+</div><!-- /app-shell -->
+
+<!-- Sidebar overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+<script type="module">
+  import { initDashboard } from '../assets/js/dashboard.js';
+  import { toggleTheme, getTheme } from '../assets/js/utils.js';
+
+  // ── THEME ───────────────────────────────────────
+  const html = document.documentElement;
+  html.setAttribute('data-theme', getTheme());
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    toggleTheme();
+    updateChartTheme();
+    lucide.createIcons();
+  });
+
+  function updateChartTheme() {
+    const theme  = getTheme();
+    const iframe = document.getElementById('tradingviewChart');
+    if (!iframe) return;
+    const base = 'https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BITSTAMP%3ABTCUSD&interval=D&hidesidetoolbar=1&symboledit=0&saveimage=0&studies=[]&style=1&timezone=Etc%2FUTC&withdateranges=1&showpopupbutton=0&locale=en';
+    iframe.src = `${base}&theme=${theme}&toolbarbg=${theme === 'dark' ? '1a2e4a' : 'f1f3f6'}`;
+  }
+
+  // ── SIDEBAR COLLAPSE ────────────────────────────
+  const sidebar     = document.getElementById('sidebar');
+  const appContent  = document.getElementById('appContent');
+  const topbar      = document.getElementById('topbar');
+  const collapseBtn = document.getElementById('sidebarCollapseBtn');
+
+  const sidebarCollapsed = localStorage.getItem('tradex-sidebar') === 'collapsed';
+  if (sidebarCollapsed) {
+    sidebar.classList.add('collapsed');
+    appContent.classList.add('sidebar-collapsed');
+    topbar.classList.add('sidebar-collapsed');
+  }
+
+  collapseBtn?.addEventListener('click', () => {
+    const isCollapsed = sidebar.classList.toggle('collapsed');
+    appContent.classList.toggle('sidebar-collapsed', isCollapsed);
+    topbar.classList.toggle('sidebar-collapsed', isCollapsed);
+    localStorage.setItem('tradex-sidebar', isCollapsed ? 'collapsed' : 'expanded');
+    lucide.createIcons();
+  });
+
+  // ── MOBILE SIDEBAR ───────────────────────────────
+  const mobileMenuBtn  = document.getElementById('mobileMenuBtn');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+  mobileMenuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('mobile-open');
+    sidebarOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  sidebarOverlay?.addEventListener('click', () => {
+    sidebar.classList.remove('mobile-open');
+    sidebarOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  // ── NOTIFICATION DROPDOWN ────────────────────────
+  const notifBtn      = document.getElementById('notifBtn');
+  const notifDropdown = document.getElementById('notifDropdown');
+
+  notifBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    notifDropdown.classList.toggle('hidden');
+    document.getElementById('userDropdown')?.classList.add('hidden');
+  });
+
+  // ── USER DROPDOWN ────────────────────────────────
+  const userMenuBtn  = document.getElementById('userMenuBtn');
+  const userDropdown = document.getElementById('userDropdown');
+
+  userMenuBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userDropdown.classList.toggle('hidden');
+    notifDropdown?.classList.add('hidden');
+  });
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', () => {
+    notifDropdown?.classList.add('hidden');
+    userDropdown?.classList.add('hidden');
+  });
+
+  // ── INIT ─────────────────────────────────────────
+  lucide.createIcons();
+  updateChartTheme();
+  await initDashboard();
+
+  // Init notification bell
+  const { initNotificationBell } = await import('../assets/js/notifications.js');
+  await initNotificationBell();
+
+  // Sync sidebar badge
+  const badge = document.getElementById('notifBadge');
+  const sidebarBadge = document.getElementById('sidebarNotifBadge');
+  if (badge && sidebarBadge) {
+    const observer = new MutationObserver(() => {
+      sidebarBadge.textContent = badge.textContent;
+      sidebarBadge.style.display = badge.style.display;
+    });
+    observer.observe(badge, { attributes: true, childList: true });
+  }
+
+  lucide.createIcons();
+</script>
+
+</body>
+</html>
