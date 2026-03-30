@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Investment Plans — TradeEx</title>
+  <link rel="icon" href="../assets/img/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+
+  <style>
+    /* ── HERO BANNER ────────────────────────────────── */
+    .plans-hero {
+      background: var(--gradient-navy);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8) var(--space-8);
+      margin-bottom: var(--space-8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plans-hero::before {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+      right: -80px; top: -100px;
+      pointer-events: none;
+    }
+
+    .plans-hero::after {
+      content: '';
+      position: absolute;
+      width: 250px; height: 250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(178,34,52,0.15) 0%, transparent 70%);
+      left: 30%; bottom: -60px;
+      pointer-events: none;
+    }
+
+    .plans-hero-content { position: relative; z-index: 1; }
+
+    .plans-hero h2 {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-2);
+    }
+
+    .plans-hero h2 span { color: var(--red-300); }
+
+    .plans-hero p {
+      font-size: var(--text-sm);
+      color: rgba(255,255,255,0.55);
+      max-width: 460px;
+      line-height: 1.6;
+      margin-bottom: var(--space-5);
+    }
+
+    .plans-hero-stats {
+      display: flex;
+      gap: var(--space-8);
+      flex-wrap: wrap;
+    }
+
+    .plans-hero-stat .val {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.03em;
+    }
+
+    .plans-hero-stat .val span { color: var(--red-300); }
+
+    .plans-hero-stat .lbl {
+      font-size: var(--text-xs);
+      color: rgba(255,255,255,0.40);
+      margin-top: 2px;
+    }
+
+    /* ── BALANCE STRIP ──────────────────────────────── */
+    .balance-strip {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-6);
+      margin-bottom: var(--space-8);
+      flex-wrap: wrap;
+    }
+
+    .balance-strip-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .balance-strip-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .balance-strip-label {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .balance-strip-val {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .balance-strip-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--border);
+    }
+
+    /* ── PLAN CARDS GRID ────────────────────────────── */
+    .plans-grid-full {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-5);
+      margin-bottom: var(--space-10);
+    }
+
+    .plan-card-full {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .plan-card-full:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--border-strong);
+    }
+
+    .plan-card-full.featured {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-accent);
+    }
+
+    .plan-card-full.featured:hover {
+      box-shadow: 0 20px 48px rgba(178,34,52,0.25);
+    }
+
+    .plan-badge-top {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: var(--gradient-red);
+      color: white;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .plan-card-icon {
+      width: 64px; height: 64px;
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: var(--space-1);
+    }
+
+    .plan-card-name {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .plan-card-duration {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .plan-roi-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: var(--text-xs);
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.04em;
+      align-self: flex-start;
+    }
+
+    .plan-divider-line {
+      height: 1px;
+      background: var(--border-light);
+    }
+
+    .plan-amounts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      background: var(--surface-2);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .plan-amount-col { flex: 1; text-align: center; }
+
+    .plan-amount-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+      margin-bottom: 4px;
+    }
+
+    .plan-amount-val {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .plan-amount-val.success { color: var(--success); }
+
+    .plan-amount-arrow {
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .plan-features-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      flex: 1;
+    }
+
+    .plan-feature-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+
+    /* ── ACTIVE INVESTMENTS SECTION ─────────────────── */
+    .active-inv-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .active-inv-row:last-child { border-bottom: none; }
+
+    /* ── INVEST MODAL ───────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6,14,31,0.75);
+      backdrop-filter: blur(6px);
+      z-index: var(--z-modal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.hidden { display: none; }
+
+    .invest-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 440px;
+      animation: scaleIn 0.25s ease;
+      overflow: hidden;
+    }
+
+    .modal-top {
+      background: var(--gradient-navy);
+      padding: var(--space-6);
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-emoji {
+      font-size: 48px;
+      margin-bottom: var(--space-3);
+      display: block;
+    }
+
+    .modal-plan-name {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.03em;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 32px; height: 32px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: rgba(255,255,255,0.70);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition-fast);
+    }
+
+    .modal-close-btn:hover { background: rgba(255,255,255,0.20); color: white; }
+
+    .modal-body { padding: var(--space-6); }
+
+    .modal-summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: var(--text-sm);
+    }
+
+    .modal-summary-row:last-child { border-bottom: none; }
+
+    .modal-summary-row .msr-label { color: var(--text-muted); font-weight: 500; }
+    .modal-summary-row .msr-val   { font-weight: 700; color: var(--text); font-family: var(--font-display); }
+    .modal-summary-row .msr-val.green  { color: var(--success); }
+    .modal-summary-row .msr-val.red    { color: var(--accent); }
+
+    /* ── NOTIFICATION DROPDOWN ──────────────────────── */
+    .notif-dropdown {
+      position: absolute;
+      top: calc(100% + 8px); right: 0;
+      width: 340px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      z-index: var(--z-dropdown);
+      animation: fadeInDown 0.2s ease;
+      overflow: hidden;
+    }
+
+    @media (max-width: 540px) {
+      .notif-dropdown {
+        position: fixed;
+        top: calc(var(--topbar-height) + 8px);
+        left: 12px; right: 12px;
+        width: auto;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .plans-grid-full { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .plans-hero { padding: var(--space-6) var(--space-5); }
+      .plans-hero-stats { gap: var(--space-5); }
+      .balance-strip { gap: var(--space-3); }
+      .balance-strip-divider { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .plans-grid-full { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+<div id="toast-container"></div>
+
+<!-- ═══ INVEST CONFIRMATION MODAL ════════════════════════ -->
+<div class="modal-overlay hidden" id="investModalOverlay">
+  <div class="invest-modal">
+    <div class="modal-top">
+      <button class="modal-close-btn" id="investModalClose">
+        <i data-lucide="x" style="width:16px;height:16px"></i>
+      </button>
+      <span class="modal-emoji" id="modalPlanEmoji">🥇</span>
+      <div class="modal-plan-name" id="modalPlanName">Gold Plan</div>
+    </div>
+
+    <div class="modal-body">
+      <p style="font-size:var(--text-sm);color:var(--text-muted);margin-bottom:var(--space-5);line-height:1.6;">
+        Review your investment details carefully before confirming.
+      </p>
+
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-5);">
+        <div class="modal-summary-row">
+          <span class="msr-label">You invest</span>
+          <span class="msr-val red" id="modalInvestAmt">$0.00</span>
+        </div>
+        <div class="modal-summary-row">
+          <span class="msr-label">You receive (7 days)</span>
+          <span class="msr-val green" id="modalPayoutAmt">$0.00</span>
+        </div>
+        <div class="modal-summary-row">
+          <span class="msr-label">Return on investment</span>
+          <span class="msr-val green" id="modalROI">+0%</span>
+        </div>
+        <div class="modal-summary-row">
+          <span class="msr-label">Duration</span>
+          <span class="msr-val" id="modalDuration">7 days</span>
+        </div>
+        <div class="modal-summary-row">
+          <span class="msr-label">Current balance</span>
+          <span class="msr-val" id="modalBalance">$0.00</span>
+        </div>
+        <div class="modal-summary-row">
+          <span class="msr-label">Balance after invest</span>
+          <span class="msr-val" id="modalAfterBalance">$0.00</span>
+        </div>
+      </div>
+
+      <div class="alert alert-info" style="margin-bottom:var(--space-5);">
+        <i data-lucide="info" style="width:18px;height:18px"></i>
+        <div class="alert-text">
+          <div class="alert-title">How it works</div>
+          Your balance will be deducted immediately. Payout lands in your wallet automatically within 7 days.
+        </div>
+      </div>
+
+      <div style="display:flex;gap:var(--space-3);">
+        <button class="btn btn-outline flex-1" id="investCancelBtn" onclick="document.getElementById('investModalOverlay').classList.add('hidden')">
+          Cancel
+        </button>
+        <button class="btn btn-accent flex-1" id="investConfirmBtn">
+          <i data-lucide="trending-up" style="width:16px;height:16px"></i>
+          Confirm Investment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-shell">
+
+  <!-- ══ SIDEBAR ════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="sidebar-logo">
+      <div class="logo-mark">T</div>
+      <span class="logo-text">Trade<span>Ex</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Main</div>
+        <a href="../dashboard/index.html" class="nav-item" data-tooltip="Dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="../deposit/index.html" class="nav-item" data-tooltip="Deposit">
+          <i data-lucide="arrow-down-circle"></i>
+          <span class="nav-label">Deposit</span>
+        </a>
+        <a href="../withdraw/index.html" class="nav-item" data-tooltip="Withdraw">
+          <i data-lucide="arrow-up-circle"></i>
+          <span class="nav-label">Withdraw</span>
+        </a>
+        <a href="index.html" class="nav-item active" data-tooltip="Invest">
+          <i data-lucide="trending-up"></i>
+          <span class="nav-label">Invest</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Account</div>
+        <a href="../portfolio/index.html" class="nav-item" data-tooltip="Portfolio">
+          <i data-lucide="pie-chart"></i>
+          <span class="nav-label">Portfolio</span>
+        </a>
+        <a href="../transactions/index.html" class="nav-item" data-tooltip="Transactions">
+          <i data-lucide="receipt"></i>
+          <span class="nav-label">Transactions</span>
+        </a>
+        <a href="../profile/index.html" class="nav-item" data-tooltip="Profile">
+          <i data-lucide="user-circle"></i>
+          <span class="nav-label">Profile</span>
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="../profile/index.html" class="sidebar-user">
+        <div class="avatar avatar-sm" id="sidebarAvatar">TX</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarUserName">Loading...</div>
+          <div class="user-role" id="sidebarUserRole">Investor</div>
+        </div>
+      </a>
+      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn">
+        <i data-lucide="chevrons-left" style="width:18px;height:18px"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN CONTENT ═══════════════════════════════════ -->
+  <div class="app-content" id="appContent">
+
+    <!-- TOPBAR -->
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i data-lucide="menu" style="width:20px;height:20px"></i>
+        </button>
+        <span class="topbar-title">Investment Plans</span>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle topbar-btn" id="themeToggle" aria-label="Toggle theme">
+          <i data-lucide="moon" class="icon-moon" style="width:18px;height:18px"></i>
+          <i data-lucide="sun"  class="icon-sun"  style="width:18px;height:18px"></i>
+        </button>
+
+        <div style="display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-full);padding:6px 14px;">
+          <i data-lucide="wallet" style="width:14px;height:14px;color:var(--text-muted)"></i>
+          <span style="font-size:var(--text-sm);font-weight:700;color:var(--text);font-family:var(--font-display);" id="walletBalanceChip">$0.00</span>
+        </div>
+
+        <div style="position:relative;flex-shrink:0;">
+          <button class="topbar-user" id="userMenuBtn">
+            <div class="avatar avatar-sm" id="topbarAvatar">TX</div>
+            <span class="user-name-topbar hide-mobile" id="topbarUserName">User</span>
+            <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted)"></i>
+          </button>
+          <div class="notif-dropdown hidden" id="userDropdown" style="width:200px;">
+            <div style="padding:var(--space-3) var(--space-4);">
+              <div style="font-size:var(--text-xs);color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Account</div>
+            </div>
+            <div style="padding:0 var(--space-2) var(--space-2);">
+              <a href="../profile/index.html" class="nav-item" style="color:var(--text-secondary);border-radius:var(--radius-md);">
+                <i data-lucide="user-circle"></i><span>Profile</span>
+              </a>
+              <a href="../dashboard/index.html" class="nav-item" style="color:var(--text-secondary);border-radius:var(--radius-md);">
+                <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+              </a>
+              <div style="height:1px;background:var(--border-light);margin:var(--space-2) 0;"></div>
+              <button data-logout class="nav-item" style="width:100%;color:var(--error);border-radius:var(--radius-md);">
+                <i data-lucide="log-out"></i><span>Log Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-main">
+
+      <!-- Hero banner -->
+      <div class="plans-hero animate-fade-in">
+        <div class="plans-hero-content">
+          <h2>Choose Your <span>Investment Plan</span></h2>
+          <p>Six powerful tiers — from Bronze to Heroic. Every plan runs 7 days and delivers guaranteed returns straight to your wallet.</p>
+          <div class="plans-hero-stats">
+            <div class="plans-hero-stat">
+              <div class="val">$200<span>M+</span></div>
+              <div class="lbl">Paid to investors</div>
+            </div>
+            <div class="plans-hero-stat">
+              <div class="val" style="color:white;">7</div>
+              <div class="lbl">Day return cycle</div>
+            </div>
+            <div class="plans-hero-stat">
+              <div class="val" style="color:white;">0%</div>
+              <div class="lbl">Hidden fees</div>
+            </div>
+            <div class="plans-hero-stat">
+              <div class="val" style="color:white;">∞</div>
+              <div class="lbl">Stackable plans</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Balance strip -->
+      <div class="balance-strip animate-fade-in-up">
+        <div class="balance-strip-item">
+          <div class="balance-strip-icon" style="background:var(--info-bg);color:var(--info);">
+            <i data-lucide="wallet" style="width:18px;height:18px"></i>
+          </div>
+          <div>
+            <div class="balance-strip-label">Available Balance</div>
+            <div class="balance-strip-val" id="stripBalance">$0.00</div>
+          </div>
+        </div>
+        <div class="balance-strip-divider"></div>
+        <div class="balance-strip-item">
+          <div class="balance-strip-icon" style="background:var(--success-bg);color:var(--success);">
+            <i data-lucide="trending-up" style="width:18px;height:18px"></i>
+          </div>
+          <div>
+            <div class="balance-strip-label">Active Plans</div>
+            <div class="balance-strip-val" id="activeCount">0</div>
+          </div>
+        </div>
+        <div class="balance-strip-divider"></div>
+        <div class="balance-strip-item" style="margin-left:auto;">
+          <a href="../deposit/index.html" class="btn btn-accent btn-sm">
+            <i data-lucide="plus-circle" style="width:14px;height:14px"></i>
+            Add Funds
+          </a>
+        </div>
+      </div>
+
+      <!-- Plan cards -->
+      <div class="section animate-fade-in-up">
+        <div class="section-header">
+          <div>
+            <div class="section-title">All Investment Plans</div>
+            <div class="section-subtitle">Plans with insufficient balance show a deposit button instead</div>
+          </div>
+        </div>
+        <div class="plans-grid-full" id="plansGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Active investments -->
+      <div class="section animate-fade-in-up delay-200">
+        <div class="section-header">
+          <div>
+            <div class="section-title">
+              Your Active Plans
+              <span class="badge badge-success" id="activeCountBadge" style="margin-left:8px;">0</span>
+            </div>
+            <div class="section-subtitle">Currently running investments</div>
+          </div>
+          <a href="../portfolio/index.html" class="btn btn-outline btn-sm">View portfolio</a>
+        </div>
+
+        <div class="card" style="padding:0 var(--space-6);">
+          <div id="activeInvestEmpty" class="d-none">
+            <div class="empty-state" style="padding:var(--space-10) var(--space-4);">
+              <i data-lucide="trending-up" class="empty-icon"></i>
+              <div class="empty-title">No active investments</div>
+              <div class="empty-text">Choose a plan above and start earning today.</div>
+            </div>
+          </div>
+          <div id="activeInvestList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<script>
+  lucide.createIcons();
+
+  const html = document.documentElement;
+  html.setAttribute('data-theme', localStorage.getItem('tradex-theme') || 'light');
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tradex-theme', next);
+    lucide.createIcons();
+  });
+
+  // Sidebar
+  const sidebar    = document.getElementById('sidebar');
+  const appContent = document.getElementById('appContent');
+  const topbar     = document.getElementById('topbar');
+
+  if (localStorage.getItem('tradex-sidebar') === 'collapsed') {
+    sidebar.classList.add('collapsed');
+    appContent.classList.add('sidebar-collapsed');
+    topbar.classList.add('sidebar-collapsed');
+  }
+
+  document.getElementById('sidebarCollapseBtn')?.addEventListener('click', () => {
+    const isCollapsed = sidebar.classList.toggle('collapsed');
+    appContent.classList.toggle('sidebar-collapsed', isCollapsed);
+    topbar.classList.toggle('sidebar-collapsed', isCollapsed);
+    localStorage.setItem('tradex-sidebar', isCollapsed ? 'collapsed' : 'expanded');
+    lucide.createIcons();
+  });
+
+  document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+    sidebar.classList.add('mobile-open');
+    document.getElementById('sidebarOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  document.getElementById('sidebarOverlay')?.addEventListener('click', () => {
+    sidebar.classList.remove('mobile-open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  // User dropdown
+  document.getElementById('userMenuBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('hidden');
+  });
+
+  document.addEventListener('click', () => {
+    document.getElementById('userDropdown')?.classList.add('hidden');
+  });
+</script>
+
+<script type="module">
+  import { initPlans } from '../assets/js/plans.js';
+
+  await initPlans();
+
+  // Sync balance strip with chip
+  const chip  = document.getElementById('walletBalanceChip');
+  const strip = document.getElementById('stripBalance');
+  if (chip && strip) strip.textContent = chip.textContent;
+
+  // Sync active count badge
+  const count = document.getElementById('activeCount');
+  const badge = document.getElementById('activeCountBadge');
+  if (count && badge) badge.textContent = count.textContent;
+
+  lucide.createIcons();
+</script>
+
+</body>
+</html>
