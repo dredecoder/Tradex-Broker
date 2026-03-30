@@ -1,0 +1,250 @@
+/* ============================================================
+   TRADEX — THEME CSS
+   Light / Dark mode toggle transitions and overrides
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   SMOOTH THEME TRANSITION
+   All elements transition smoothly when theme changes
+   ------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.2s ease,
+    box-shadow 0.3s ease,
+    fill 0.2s ease;
+}
+
+/* Exclude transitions that would look janky */
+.btn,
+.btn *,
+.nav-item,
+.stat-card,
+.plan-card,
+.quick-action,
+.topbar-btn,
+.theme-toggle,
+.page-btn,
+input,
+select,
+textarea {
+  transition: var(--transition-base);
+}
+
+/* Animations should NOT inherit the theme transition */
+.animate-fade-in,
+.animate-fade-in-up,
+.animate-fade-in-down,
+.animate-scale-in,
+.spinner,
+.skeleton,
+.dot-loader span {
+  transition: none;
+}
+
+
+/* ------------------------------------------------------------
+   THEME TOGGLE BUTTON STATES
+   ------------------------------------------------------------ */
+.theme-toggle .icon-sun        { display: none; }
+.theme-toggle .icon-moon       { display: block; }
+
+[data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+/* Auth page button uses same class */
+.auth-theme-btn .icon-sun  { display: none; }
+.auth-theme-btn .icon-moon { display: block; }
+
+[data-theme="dark"] .auth-theme-btn .icon-sun  { display: block; }
+[data-theme="dark"] .auth-theme-btn .icon-moon { display: none; }
+
+/* Mobile drawer toggle */
+.theme-toggle-sm .icon-sun  { display: none; }
+.theme-toggle-sm .icon-moon { display: block; }
+
+[data-theme="dark"] .theme-toggle-sm .icon-sun  { display: block; }
+[data-theme="dark"] .theme-toggle-sm .icon-moon { display: none; }
+
+
+/* ------------------------------------------------------------
+   DARK MODE SPECIFIC OVERRIDES
+   Things that need extra attention in dark mode
+   ------------------------------------------------------------ */
+
+/* Sidebar — already dark by default, slight adjustment */
+[data-theme="dark"] .sidebar {
+  background: #020810;
+}
+
+/* Topbar glass effect in dark mode */
+[data-theme="dark"] .topbar {
+  background: rgba(13,27,46,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--border);
+}
+
+/* Cards get a subtle border glow */
+[data-theme="dark"] .card,
+[data-theme="dark"] .stat-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .stat-card:hover {
+  border-color: var(--navy-500);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(27,79,138,0.3);
+}
+
+/* Plan cards in dark mode */
+[data-theme="dark"] .plan-card:hover {
+  border-color: var(--navy-400);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(27,79,138,0.4);
+}
+
+[data-theme="dark"] .plan-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-accent);
+}
+
+/* Form inputs in dark */
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme="dark"] .form-input::placeholder,
+[data-theme="dark"] .form-textarea::placeholder {
+  color: var(--text-faint);
+}
+
+[data-theme="dark"] .input-addon {
+  background: var(--surface-3);
+  border-right-color: var(--border);
+}
+
+/* Select arrow in dark */
+[data-theme="dark"] .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A90B5' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Table rows in dark */
+[data-theme="dark"] .data-table thead {
+  background: var(--surface-2);
+}
+
+[data-theme="dark"] .data-table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+/* Modal in dark */
+[data-theme="dark"] .modal {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .modal-overlay {
+  background: rgba(2,8,16,0.85);
+}
+
+/* Toast in dark */
+[data-theme="dark"] .toast {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* Notification dropdown dark */
+[data-theme="dark"] .notif-dropdown {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* Page loader dark */
+[data-theme="dark"] .page-loader {
+  background: var(--bg);
+}
+
+/* File upload dark */
+[data-theme="dark"] .file-upload {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .file-upload:hover,
+[data-theme="dark"] .file-upload.dragover {
+  background: var(--surface-2);
+  border-color: var(--navy-400);
+}
+
+/* Scrollbar dark */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--navy-800);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+}
+
+/* Quick actions dark */
+[data-theme="dark"] .quick-action {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .quick-action:hover {
+  border-color: var(--navy-400);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* Stat card icon backgrounds in dark */
+[data-theme="dark"] .stat-card .stat-icon {
+  background: var(--surface-3);
+}
+
+/* Nav section labels in dark (already handled by sidebar dark bg) */
+[data-theme="dark"] .sidebar .nav-section-label {
+  color: rgba(255,255,255,0.20);
+}
+
+/* Flag strip stays vivid in both modes */
+[data-theme="dark"] .flag-strip {
+  background: linear-gradient(
+    90deg,
+    var(--red-400)  0%,
+    var(--red-400)  33%,
+    rgba(255,255,255,0.5) 33%,
+    rgba(255,255,255,0.5) 66%,
+    var(--navy-400) 66%,
+    var(--navy-400) 100%
+  );
+}
+
+/* Gradient overlays slightly different in dark for better contrast */
+[data-theme="dark"] .stat-card::before {
+  opacity: 0.9;
+}
+
+
+/* ------------------------------------------------------------
+   REDUCED MOTION SUPPORT
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
